@@ -6,9 +6,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Webcam from 'react-webcam';
+import Zoom from './zoom';
 
 import { faSchool } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+const zoom = new Zoom();
 
 export default function FormDialog(props) {
 	const [open, setOpen] = useState(false);
@@ -38,7 +42,9 @@ export default function FormDialog(props) {
 				aria-labelledby="form-dialog-title"
 			>
 				<DialogTitle id="form-dialog-title"></DialogTitle>
-				<DialogContent></DialogContent>
+				<DialogContent>
+					<Button onClick={zoom.connect()}>Zoom</Button>
+				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
 						Cancel

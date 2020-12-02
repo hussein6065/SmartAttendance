@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Webcam from 'react-webcam';
-import Zoom from './zoom';
+// import Webcam from 'react-webcam';
 
 import { faSchool } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-const zoom = new Zoom();
 
 export default function FormDialog(props) {
 	const [open, setOpen] = useState(false);
@@ -43,7 +40,7 @@ export default function FormDialog(props) {
 			>
 				<DialogTitle id="form-dialog-title"></DialogTitle>
 				<DialogContent>
-					<Button onClick={zoom.connect()}>Zoom</Button>
+					<Button>Zoom</Button>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">

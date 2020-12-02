@@ -23,6 +23,6 @@
     
     // echo 'Hussein, the thing is working';
     $info = array();
-    $info['data']=$intern->getCourses();
+    $info['data']=$student->getCourses();
    
     echo json_encode($info);

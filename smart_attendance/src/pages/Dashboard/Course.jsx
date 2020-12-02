@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import { Col, Card, CardBody } from 'reactstrap';
 import Modal from '../../components/modal';
-import {
-	faBookOpen,
-	faBook,
-	faClock,
-	faCalendarDay,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import {
+// 	faBookOpen,
+// 	faBook,
+// 	faClock,
+// 	faCalendarDay,
+// } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 class Course extends Component {
 	constructor(props) {
 		super(props);
@@ -16,6 +16,7 @@ class Course extends Component {
 	}
 	render() {
 		const { data } = this.props;
+		console.log(data);
 		return (
 			<Col md="6" lg="3">
 				<Card className="mb-3" style={{ width: '300px' }}>
@@ -61,8 +62,8 @@ class Course extends Component {
 }
 
 export default Course;
-{
-	/* <Card className="mb-3" style={{}}>
+// {
+/* <Card className="mb-3" style={{}}>
 	<CardBody>
 		<div style={{ height: '100px', backgroundColor: '#06A3B7' }}></div>
 		<div>
@@ -87,4 +88,4 @@ export default Course;
 		<div className="border border-info"></div>
 	</CardBody>
 </Card>; */
-}
+// }

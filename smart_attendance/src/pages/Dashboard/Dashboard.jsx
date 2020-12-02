@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { logo } from '../Logo';
 import { Row, Col } from 'reactstrap';
-
-import Course from './Course';
+// import Zoom from '../../components/Zoom';
+// import Course from './Course';
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
@@ -24,7 +24,8 @@ class Dashboard extends Component {
 	}
 
 	render() {
-		const { data } = this.state.data;
+		// const { data } = this.state.data;
+		console.log(this.state.data);
 		return (
 			<Fragment>
 				<nav
@@ -48,15 +49,12 @@ class Dashboard extends Component {
 				</Row>
 
 				<Row className=" m-2 p-2 border border-info">
-					{/* <Course />
-					<Course />
-					<Course />
-					<Course />
-					<Course />
-					<Course /> */}
-					{this.state.data.map((item) => (
+					{/* {this.state.data.map((item) => (
 						<Course data={item} />
-					))}
+					))} */}
+					<div style={{ color: 'white', backgroundColor: 'white' }}>
+						<a href="./zoom">Join Class</a>
+					</div>
 				</Row>
 
 				<Col></Col>

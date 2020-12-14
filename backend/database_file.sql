@@ -1,9 +1,9 @@
 
 -- USE HBF60652022;
-DROP SCHEMA IF EXISTS HBF60652022;
-CREATE SCHEMA HBF60652022;
+DROP SCHEMA IF EXISTS HBF606520222;
+CREATE SCHEMA HBF606520222;
 
-USE HBF60652022;
+USE HBF606520222;
 
 CREATE TABLE Students(
 	StudentID INT UNSIGNED PRIMARY KEY,
@@ -66,10 +66,6 @@ CREATE TABLE Faculty(
     );
 
 
-
-
-
-
 CREATE TABLE Department_HOD(
 	HOD_Date DATETIME DEFAULT NOW(),
 	DepartmentCode VARCHAR(10) NOT NULL,
@@ -104,9 +100,13 @@ CREATE TABLE Registered_Courses(
 	RegistrationID BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	StudentID INT UNSIGNED NOT NULL,
     CourseID VARCHAR(10) NOT NULL,
+    FacultyID VARCHAR(10) NOT NULL,
+    FacultyIntern_ID VARCHAR(10) NOT NULL,
 	Registered_Date DATETIME DEFAULT NOW(), 
     FOREIGN KEY (StudentID) REFERENCES Students (StudentID),
-    FOREIGN KEY (CourseID) REFERENCES Courses (CourseID)
+    FOREIGN KEY (CourseID) REFERENCES Courses (CourseID),
+    FOREIGN KEY (FacultyID) REFERENCES Faculty(FacultyID),
+    FOREIGN KEY (FacultyIntern_ID) REFERENCES FacultyIntern (FacultyIntern_ID)
 	);
 
 
@@ -116,12 +116,12 @@ CREATE TABLE Registered_Courses(
     
 CREATE TABLE Lectures(
 	Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    LectureDate Date,
+    Lecture VARCHAR(100),
+    LectureDate DATETIME,
     CourseID VARCHAR(10)NOT NULL,
     FacultyID VARCHAR(10) NOT NULL,
     FacultyIntern_ID VARCHAR(10) NOT NULL,
-    Days ENUM ('M','T','W','TH','F') NOT NULL,
-    TimeGMT TIME NOT NULL,
+    NumWeek int unsigned,
     ZoomLink VARCHAR(100),
     ZoomMeetingId INT UNSIGNED,
     ZoomPassword VARCHAR(100),

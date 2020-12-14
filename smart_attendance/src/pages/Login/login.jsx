@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
-import Logo from '../Logo';
+import { logo } from '../Logo';
 import Switch from 'react-switch';
 
 export default class Login extends Component {
@@ -47,7 +47,7 @@ export default class Login extends Component {
 					style={{ backgroundColor: '#1c8ef9' }}
 				>
 					<div className="container d-flex flex-row justify-content-center ">
-						<img width={100} className="" src={Logo} alt="logo" />
+						<img width={100} className="" src={logo} alt="logo" />
 						<h1 className="m-auto">Online Attendance Portal</h1>
 					</div>
 				</nav>

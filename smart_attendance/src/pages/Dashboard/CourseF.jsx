@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 // import Button from '@material-ui/core/Button';
 import { Col, Card, CardBody } from 'reactstrap';
-import Modal from '../../components/modal';
+import Modal from '../../components/modals/modal';
+import ModalM from '../../components/modals/scheduleM';
 // import {
 // 	faBookOpen,
 // 	faBook,
@@ -64,9 +65,7 @@ class Course extends Component {
 							</h4>
 						</div>
 						<hr />
-						<nav>
-							<Modal />
-						</nav>
+						<span>{0 ? <Modal title={'Start Meeting'} /> : <ModalM />}</span>
 					</CardBody>
 				</Card>
 			</Col>

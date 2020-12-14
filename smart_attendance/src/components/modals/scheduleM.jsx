@@ -24,13 +24,9 @@ export default function FormDialog(props) {
 
 	return (
 		<span>
-			<Button
-				className="badge badge-primary"
-				color="primary"
-				onClick={handleClickOpen}
-			>
-				<FontAwesomeIcon icon={faSchool} />
-			</Button>
+			<button className="btn btn-info btn-block" onClick={handleClickOpen}>
+				Schedule Lectures
+			</button>
 			<Dialog
 				open={open}
 				disableBackdropClick
@@ -38,16 +34,26 @@ export default function FormDialog(props) {
 				onClose={handleClose}
 				aria-labelledby="form-dialog-title"
 			>
-				<DialogTitle id="form-dialog-title"></DialogTitle>
+				<DialogTitle id="form-dialog-title">
+					Attandance of Computer Organzation
+				</DialogTitle>
 				<DialogContent>
-					<Button>Zoom</Button>
+					Lecturer: Francis Gatsi
+					<br />
+					Intern: Nana Ama
+					<br />
+					Lecture title: <input type="text" name="" id="" />
+					<br />
+					Date: <input type="date" name="date" id="date" />
+					<br />
+					Time: <input type="time" name="time" id="time" />
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">
 						Cancel
 					</Button>
 					<Button onClick={handleClose} color="primary">
-						Update
+						Schedule Lecture
 					</Button>
 				</DialogActions>
 			</Dialog>

@@ -10,8 +10,6 @@
     $database = new Database();
     $db = $database->connect();
 
-    // $category->id = isset($_GET['role']) ? $_GET['id'] : die();
-    
     $student = new Student($db);
     $faculty = new Faculty($db);
     $intern = new Intern($db);
@@ -19,10 +17,12 @@
     $student->id = '60652022';
     $faculty->id = 'ASF95631';
     $intern->id = 'ASFI5681';
+    $intern->courseID='CS 222';
+    $intern->lecture='1';
     $student->ashesiEmail='hussein.fusei@ashesi.edu.gh';
     
-    // echo 'Hussein, the thing is working';
+;
     $info = array();
-    $info['data']=$student->getCourses();
-   
+    $info['data']=$intern->getStudentsPreLecture();
+    $info['data2']=$intern->getLecturesPerCourse();
     echo json_encode($info);

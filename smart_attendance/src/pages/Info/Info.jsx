@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { logo } from '../Logo';
 import { Row, Col } from 'reactstrap';
-// import Zoom from '../../components/Zoom';
-import Course from './Course';
+import Table from '../../components/Table/Table';
+// import Course from './Course';
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
@@ -24,8 +24,6 @@ class Dashboard extends Component {
 	// }
 
 	render() {
-		// const { data } = this.state.data;
-		console.log(this.state.data);
 		return (
 			<Fragment>
 				<nav
@@ -44,19 +42,33 @@ class Dashboard extends Component {
 
 				<Row className=" m-2 p-2 border border-info">
 					<span className="text-capitalize">
-						<h2>lectures</h2>
+						<h2>Computer Organization</h2>
 					</span>
 				</Row>
-
 				<Row className=" m-2 p-2 border border-info">
-					<Course />
-					<Course />
-					<Course />
-					<Course />
-					<Course />
+					<Col>
+						<div>
+							<span className="mr-2">Course Code:</span> <span>CSS 112</span>
+						</div>
+						<div>
+							<span className="mr-2">Faculty:</span> <span>Francis Gatsi</span>
+						</div>
+						<div>
+							<span className="mr-2">Faculty Intern:</span>
+							<span>Nana Ama</span>
+						</div>
+						<div>
+							<span className="mr-2">Number of classes Missed:</span>
+							<span>5</span>
+						</div>
+					</Col>
+					<Col>Graph</Col>
 				</Row>
-
-				<Col></Col>
+				<Row className=" m-2 p-2 border border-info">
+					<Col>
+						<Table />
+					</Col>
+				</Row>
 			</Fragment>
 		);
 	}

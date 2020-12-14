@@ -4,7 +4,7 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { logo } from '../Logo';
 import { Row, Col } from 'reactstrap';
 // import Zoom from '../../components/Zoom';
-import Course from './Course';
+import Course from './CourseF';
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);

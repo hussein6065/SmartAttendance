@@ -1,20 +1,34 @@
 import React, { Component } from 'react';
 import './index.css';
 import { logo } from '../Logo';
+import { connect } from 'react-redux';
 import Switch from 'react-switch';
-
-export default class Login extends Component {
+import { ToastContainer, toast } from 'react-toastify';
+import {
+	setLogin,
+	setUserData,
+	setUser,
+	setUserType,
+} from '../../reducers/Information';
+import { RotateLoader } from 'react-spinners';
+import { css } from '@emotion/react/';
+class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			username: '',
 			password: '',
 			userError: false,
-			// if user is lecture of FI
-			passError: false,
+			load: false,
+
 			faculty: false,
 		};
+		toast.configure();
 	}
+	loaderCSS = css`
+		margin-top: 25px;
+		margin-bottom: 25px;
+	`;
 	handleSwitch = (value) => {
 		this.setState({ faculty: value });
 	};
@@ -23,13 +37,17 @@ export default class Login extends Component {
 			password: event.target.value,
 		});
 	};
+
 	handleUsername = (event) => {
-		const email = 'hussein.fuseini@ashesi.edu.gh';
-		event.target.value === email
+		// const email = 'hussein.fuseini@ashesi.edu.gh';
+		var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+			event.target.value
+		);
+
+		valid
 			? this.setState({
 					username: event.target.value,
 					userError: false,
-					faculty: true,
 			  })
 			: this.setState({
 					username: event.target.value,
@@ -38,6 +56,105 @@ export default class Login extends Component {
 	};
 	handleSubmit = (event) => {
 		event.preventDefault();
+		let {
+			enableLogin,
+			setLogin,
+			setUser,
+			setUserType,
+			setUserData,
+		} = this.props;
+
+		var data = {
+			email: this.state.username,
+			password: this.state.password,
+			role: this.state.faculty ? 'fi' : 'student',
+		};
+		if (!this.state.userError && !(this.state.password === '')) {
+			console.log(data);
+			fetch('http://localhost/backend/backend/api/login.php', {
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+				.then((response) => response.json())
+
+				.then((data) => {
+					if (data.status === 1) {
+						setLogin(!enableLogin);
+						setUser(data.info);
+						setUserData(data.courses);
+						setUserType(data.type);
+						// console.log(data.courses);
+						toast.success(
+							<div>
+								<span
+									style={{ width: '100%', textAlign: 'center', float: 'right' }}
+								>
+									Login Successful
+								</span>
+							</div>,
+							{
+								position: toast.POSITION.BOTTOM_CENTER,
+								autoClose: 3000,
+								hideProgressBar: true,
+								closeOnClick: false,
+								pauseOnHover: false,
+								draggable: false,
+								progress: undefined,
+								closeButton: false,
+								onOpen: () => {
+									this.setState({ load: true });
+								},
+								onClose: () => {
+									this.props.history.push('/Dashboard/Student');
+								},
+							}
+						);
+					} else {
+						toast.info(
+							<div>
+								<span
+									style={{ width: '100%', textAlign: 'center', float: 'right' }}
+								>
+									Invalid Email and Password
+								</span>
+							</div>,
+							{
+								position: toast.POSITION.BOTTOM_CENTER,
+								autoClose: 1500,
+								hideProgressBar: true,
+								closeOnClick: false,
+								pauseOnHover: false,
+								draggable: false,
+								progress: undefined,
+								closeButton: false,
+							}
+						);
+					}
+				});
+		} else {
+			toast.error(
+				<div>
+					<span style={{ width: '100%', textAlign: 'center', float: 'right' }}>
+						{this.state.password === ''
+							? 'Enter Password'
+							: 'Enter a Valid Email'}
+					</span>
+				</div>,
+				{
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: 1500,
+					hideProgressBar: true,
+					closeOnClick: false,
+					pauseOnHover: false,
+					draggable: false,
+					progress: undefined,
+					closeButton: false,
+				}
+			);
+		}
 	};
 	render() {
 		return (
@@ -51,6 +168,7 @@ export default class Login extends Component {
 						<h1 className="m-auto">Online Attendance Portal</h1>
 					</div>
 				</nav>
+				<ToastContainer />
 				<div className="auth-wrapper">
 					<form action="#" className="auth-inner">
 						<h3>Log In</h3>
@@ -121,14 +239,52 @@ export default class Login extends Component {
 							<button
 								type="submit"
 								className="btn btn-success btn-block"
-								onClick={this.handleSubmit}
+								onClick={() => {
+									this.props.history.push('/signUp/');
+								}}
 							>
 								Sign Up
 							</button>
 						</div>
 					</form>
+					{this.state.load ? (
+						<div
+							style={{
+								position: 'fixed',
+								top: '0',
+								left: '0',
+								height: '100vh',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								width: '100%',
+								zIndex: '1500',
+							}}
+						>
+							<div>
+								<RotateLoader
+									css={this.loaderCSS}
+									color="blue"
+									loading={this.state.load}
+								/>
+							</div>
+						</div>
+					) : (
+						''
+					)}
 				</div>
 			</div>
 		);
 	}
 }
+const mapStateToProps = (state) => ({
+	enableLogin: state.Information.enableLogin,
+});
+const mapDispatchToProps = (dispatch) => ({
+	setLogin: (enable) => dispatch(setLogin(enable)),
+	setUser: (enable) => dispatch(setUser(enable)),
+	setUserData: (enable) => dispatch(setUserData(enable)),
+	setUserType: (enable) => dispatch(setUserType(enable)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

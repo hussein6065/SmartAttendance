@@ -19,17 +19,16 @@ class Dashboard extends Component {
 		};
 	}
 
-	componentDidMount() {
-		fetch('http://localhost/backend/backend/api/read.php')
-			.then((res) => res.json())
-			.then(
-				(results) => {
-					this.setState({ data: results.data });
-				},
-				(error) => {
-					this.setState({ error });
-				}
-			);
+	UNSAFE_componentWillMount() {
+		let { enableLogin, user, userData, setType } = this.props;
+
+		if (!enableLogin) {
+			this.props.history.push('/login');
+		} else {
+			this.setState({ info: user });
+			this.setState({ data: userData });
+			this.setState({ type: setType });
+		}
 	}
 	data = [
 		{
@@ -67,7 +66,13 @@ class Dashboard extends Component {
 						<h1 className="m-auto">Online Attendance</h1>
 					</div>
 
-					<button type="button" className="btn btn-light">
+					<button
+						type="button"
+						className="btn btn-light"
+						onClick={() => {
+							this.props.history.push('/login/');
+						}}
+					>
 						<FontAwesomeIcon icon={faSignOutAlt} />
 					</button>
 				</nav>

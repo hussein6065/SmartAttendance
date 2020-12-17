@@ -18,8 +18,9 @@
         case 'student':
             $student->ashesiEmail = $data->email;
             $student->password = $data->password;
-            if($student->verifyEmail() && $student->verifyPassword()){
-                echo json_encode($student->userData());
+            $student->id = $data->id;
+            if($student->registerUser()){
+                echo json_encode( array('status'=>"1"));
                     return;
             }else{
                 echo json_encode(
@@ -30,8 +31,9 @@
         case 'fi':
             $intern->ashesiEmail = $data->email;
             $intern->password = $data->password;
-            if($intern->verifyEmail() && $intern->verifyPassword()){
-                echo json_encode($intern->userData());
+            $intern->id = $data->id;
+            if($intern->registerUser()){
+                echo json_encode( array('status'=>"1"));
                     return;
             }else{
                 echo json_encode(
@@ -40,8 +42,6 @@
             }
                 break;
         default:
-        echo json_encode(
-            array('status'=>"699")
-        );
+            # code...
             break;
     }

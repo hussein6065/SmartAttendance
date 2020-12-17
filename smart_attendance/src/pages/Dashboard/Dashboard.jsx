@@ -37,7 +37,13 @@ class Dashboard extends Component {
 						<h1 className="m-auto">Online Attendance</h1>
 					</div>
 
-					<button type="button" className="btn btn-light">
+					<button
+						type="button"
+						className="btn btn-light"
+						onClick={() => {
+							this.props.history.push('/login/');
+						}}
+					>
 						<FontAwesomeIcon icon={faSignOutAlt} />
 					</button>
 				</nav>

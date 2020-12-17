@@ -15,6 +15,8 @@ class Student{
     public $ashesiEmail;
     public $phoneNumber;
     public $facialData;
+    public $password;
+    private $logIn;
 
 
     public function __construct($db){
@@ -43,13 +45,70 @@ class Student{
 
         return false;
 
-
+    }
+    public function registerUser(){
+        if(!$this->registered() && $this->verifyEmail()){
+            $query = 'UPDATE Students SET PasswordC=:pass,Registered=true where AshesiEmail=:email and StudentID=:id';
+            $stmt = $this->connection->prepare($query);
+            $this->password= password_hash($this->password,PASSWORD_BCRYPT);
+            $stmt->bindparam(':pass',$this->password);
+            $stmt->bindparam(':email',$this->ashesiEmail);
+            $stmt->bindparam(':id',$this->id);
+            if($stmt->execute()){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+    private function registered(){
+        $query = 'SELECT EXISTS(SELECT * from Students  WHERE AshesiEmail=:email and Registered=1) as state';
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindparam(':email',$this->ashesiEmail);
+        if($stmt->execute()){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            if($state == '1'){
+                return true;
+            }
+            return false;
+        }
+    }
+    public function userData(){
+        $info = array(
+            'info'=>$this->getinfomation(),
+            'courses'=>$this->getCourses(),
+            'status'=>1,
+            'type'=>'student'
+        );
+        if($this->registered() && $this->logIn){
+            return $info;
+            }else{
+                return array('status'=>"0");
+            }
+        
 
     }
-    public function getinfomation($pd){
+    private function getinfomation(){
+        $query = 'SELECT StudentID, concat(FName, " ", LName) as student, Major, AshesiEmail from Students  where StudentID=:id';
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindparam(':id',$this->id);
+      
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        extract($row);
+        $info = array(
+            'id'=>$StudentID,
+            'name'=>$student,
+            'major'=>$Major,
+            'email'=>$AshesiEmail
+            );
+        return $info;
+    
+        
         
     }
-    public function verifyEmail(){
+    private function verifyID(){
         $query = 'SELECT EXISTS(SELECT * from '.$this->table.'  WHERE AshesiEmail=:email) as state';
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':email',$this->ashesiEmail);
@@ -61,6 +120,38 @@ class Student{
             }
             return false;
         }
+    }
+    public function verifyEmail(){
+        $query = 'SELECT EXISTS(SELECT * from Students  WHERE AshesiEmail=:email) as state';
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindparam(':email',$this->ashesiEmail);
+        if($stmt->execute()){
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            if($state == '1'){
+                return true;
+            }
+            return false;
+        }
+    }
+    public function verifyPassword(){
+        $query = 'SELECT StudentID,PasswordC from Students WHERE AshesiEmail=:email';
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindparam(':email',$this->ashesiEmail);
+        if($stmt->execute()){
+            if($stmt->rowCount()>0){
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            if(password_verify($this->password,$PasswordC)){
+                $this->id = $StudentID;
+                $this->logIn = true;
+                return true;
+            }
+            return false;
+            // return false;
+            }
+        }
+        return false;
     }
     public function verifyInformation(){
         $query = 'SELECT EXISTS(SELECT * from '.$this->table.'  WHERE FName=:f and LName=:l and StudentID =:id and AshesiEmail=:email ) as state';
@@ -96,8 +187,8 @@ class Student{
         return false;
     }
 
-    public function getCourses(){
-        $query = 'SELECT C.CourseID, C.CourseName, concat(I.FName," ",I.LName) as FI, concat(F.FName," ",F.LName) as Faculty , L.TimeGMT,L.ZoomLink,L.ZoomMeetingId,L.ZoomPassword
+    private function getCourses(){
+        $query = 'SELECT C.CourseID, C.CourseName, concat(I.FName," ",I.LName) as FI, concat(F.FName," ",F.LName) as Faculty , L.LectureTime,L.ZoomLink,L.ZoomMeetingId,L.ZoomPassword
 		FROM Registered_Courses R 
         INNER JOIN Lectures L on R.CourseID = L.CourseID
         INNER JOIN Courses C on L.CourseID = C.CourseID
@@ -116,12 +207,10 @@ class Student{
                    $course = array(
                        'id'=>$CourseID,
                        'course'=>$CourseName,
+                       'date' =>$LectureTime,
                        'fi'=>$FI,
                        'faculty'=>$Faculty,
-                       'time'=>$TimeGMT,
-                       'zoomlink'=>$ZoomLink,
-                       'zoomMeetingId'=>$ZoomMeetingId,
-                       'zoomPassword'=>$ZoomPassword
+                       'zoomlink'=>$ZoomLink
                    );
                    array_push($courses,$course);
                }

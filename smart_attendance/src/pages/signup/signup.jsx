@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import './index.css';
 import { image, logo } from '../Logo';
 import Switch from 'react-switch';
-import FaceScan from '../../components/modals/faceScan';
+// import FaceScan from '../../components/modals/faceScan';
+import { ToastContainer, toast } from 'react-toastify';
+import { RotateLoader } from 'react-spinners';
+import { css } from '@emotion/react/';
 
 export default class Login extends Component {
 	constructor(props) {
@@ -10,12 +13,15 @@ export default class Login extends Component {
 		this.state = {
 			username: '',
 			password: '',
+			confirmPass: '',
 			userError: false,
 			// if user is lecture of FI
-			passError: false,
+			passError: true,
 			faculty: false,
-			image,
+			id: '',
+			load: false,
 		};
+		toast.configure();
 	}
 	handleSwitch = (value) => {
 		this.setState({ faculty: value });
@@ -26,20 +32,115 @@ export default class Login extends Component {
 		});
 	};
 	handleUsername = (event) => {
-		const email = 'hussein.fuseini@ashesi.edu.gh';
-		event.target.value === email
+		// const email = 'hussein.fuseini@ashesi.edu.gh';
+		var valid = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+			event.target.value
+		);
+
+		valid
 			? this.setState({
 					username: event.target.value,
 					userError: false,
-					faculty: true,
 			  })
 			: this.setState({
 					username: event.target.value,
 					userError: true,
 			  });
 	};
+	handlePasswordConfirm = (event) => {
+		event.target.value === this.state.password
+			? this.setState({
+					confirmPass: event.target.value,
+					passError: false,
+			  })
+			: this.setState({
+					confirmPass: event.target.value,
+					passError: true,
+			  });
+	};
+	handleId = (event) => {
+		this.setState({
+			id: event.target.value,
+		});
+	};
 	handleSubmit = (event) => {
 		event.preventDefault();
+
+		if (
+			!this.state.userError &&
+			!this.state.passError &&
+			!(this.state.id === '')
+		) {
+			this.setState({ load: true });
+			var data = {
+				email: this.state.username,
+				password: this.state.password,
+				id: this.state.id,
+				role: this.state.faculty ? 'fi' : 'student',
+			};
+			console.log(data);
+			fetch('http://localhost/backend/backend/api/register.php', {
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			})
+				.then((response) => response.json())
+
+				.then((data) => {
+					if (data.status === '1') {
+						toast.success(
+							<div>
+								<span
+									style={{ width: '100%', textAlign: 'center', float: 'right' }}
+								>
+									Sign Up Successful
+								</span>
+							</div>,
+							{
+								position: toast.POSITION.BOTTOM_CENTER,
+								autoClose: 3000,
+								hideProgressBar: true,
+								closeOnClick: false,
+								pauseOnHover: false,
+								draggable: false,
+								progress: undefined,
+								closeButton: false,
+								onOpen: () => {
+									this.setState({ load: true });
+								},
+								onClose: () => {
+									this.props.history.push('/login/');
+								},
+							}
+						);
+					} else {
+						toast.info(
+							<div>
+								<span
+									style={{ width: '100%', textAlign: 'center', float: 'right' }}
+								>
+									Invalid Email and Password
+								</span>
+							</div>,
+							{
+								position: toast.POSITION.BOTTOM_CENTER,
+								autoClose: 1500,
+								hideProgressBar: true,
+								closeOnClick: false,
+								pauseOnHover: false,
+								draggable: false,
+								progress: undefined,
+								closeButton: false,
+								onClose: () => {
+									this.setState({ load: false });
+								},
+							}
+						);
+					}
+				});
+		}
 	};
 
 	sendData = () => {
@@ -94,11 +195,21 @@ export default class Login extends Component {
 					<div className="container d-flex flex-row justify-content-center ">
 						<img width={100} className="" src={logo} alt="logo" />
 						<h1 className="m-auto">Online Attendance Portal</h1>
+						<div>
+							<button
+								onClick={() => {
+									this.props.history.push('/login/');
+								}}
+								className="btn btn-info btn-block"
+							>
+								Login
+							</button>
+						</div>
 					</div>
 				</nav>
 				<div className="auth-wrapper">
 					<form action="#" className="auth-inner">
-						<h3>Log In</h3>
+						<h3>Sign Up</h3>
 						<div className="form-group">
 							<div className="form-group mt-3">
 								<label htmlFor="email">
@@ -120,22 +231,13 @@ export default class Login extends Component {
 								/>
 							</div>
 							<div className="form-group mt-3">
-								<label htmlFor="email">
-									Staff | Student ID{' '}
-									<span className="text-danger">
-										{this.state.userError ? '*' : ''}
-									</span>
-								</label>
+								<label htmlFor="email">Staff | Student ID </label>
 								<input
 									type="text"
-									className={
-										this.state.userError
-											? 'form-control border border-danger'
-											: 'form-control'
-									}
+									className="form-control"
 									placeholder="Enter ID number"
-									value={this.state.username}
-									onChange={this.handleUsername}
+									value={this.state.id}
+									onChange={this.handleId}
 								/>
 							</div>
 
@@ -150,13 +252,18 @@ export default class Login extends Component {
 								/>
 							</div>
 							<div className="form-group mt-3">
-								<label htmlFor="password">Confirm Password</label>
+								<label htmlFor="password">
+									Confirm Password{' '}
+									<span className="text-danger">
+										{this.state.passError ? '* No match' : ''}
+									</span>
+								</label>
 								<input
 									type="password"
 									placeholder="Enter password"
 									className="form-control"
-									value={this.state.password}
-									onChange={this.handlePassword}
+									value={this.state.confirmPass}
+									onChange={this.handlePasswordConfirm}
 								/>
 							</div>
 
@@ -165,7 +272,9 @@ export default class Login extends Component {
 
 								<span className="float-right">
 									<Switch
-										onChange={this.handleSwitch}
+										onChange={() => {
+											this.setState({ faculty: !this.state.faculty });
+										}}
 										checked={this.state.faculty}
 										onColor="#86d3ff"
 										onHandleColor="#2693e6"
@@ -182,7 +291,6 @@ export default class Login extends Component {
 								</span>
 							</label>
 
-							<FaceScan />
 							<hr />
 							<button
 								type="submit"
@@ -192,17 +300,33 @@ export default class Login extends Component {
 								Sign Up
 							</button>
 						</div>
-						<button
-							// type="submit"
-							className="btn btn-success btn-block"
-							onClick={this.sendData}
-						>
-							Send Data
-						</button>
 					</form>
-					<div>
-						<img src={this.state.image} alt="" />
-					</div>
+
+					{this.state.load ? (
+						<div
+							style={{
+								position: 'fixed',
+								top: '0',
+								left: '0',
+								height: '100vh',
+								display: 'flex',
+								alignItems: 'center',
+								justifyContent: 'center',
+								width: '100%',
+								zIndex: '1500',
+							}}
+						>
+							<div>
+								<RotateLoader
+									css={this.loaderCSS}
+									color="blue"
+									loading={this.state.load}
+								/>
+							</div>
+						</div>
+					) : (
+						''
+					)}
 				</div>
 			</div>
 		);

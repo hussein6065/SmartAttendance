@@ -18,7 +18,7 @@ CREATE TABLE Students(
     nonAshesiEmail VARCHAR(70) UNIQUE,
     PhoneNumber VARCHAR(20) NOT NULL,
     FacialData VARCHAR(100),
-    PasswordC VARCHAR(50) DEFAULT NULL,
+    PasswordC VARCHAR(100) DEFAULT NULL,
     Registered BOOLEAN DEFAULT FALSE
     );
     
@@ -60,7 +60,7 @@ CREATE TABLE Faculty(
     nonAshesiEmail VARCHAR(70) UNIQUE,
     PhoneNumber VARCHAR(20),
     FacialData VARCHAR(100) UNIQUE,
-    PasswordC VARCHAR(50) DEFAULT NULL,
+    PasswordC VARCHAR(100) DEFAULT NULL,
     Registered BOOLEAN DEFAULT FALSE,
     FOREIGN KEY(DepartmentCode) REFERENCEs Departments(DepartmentCode)
     );
@@ -89,7 +89,7 @@ CREATE TABLE FacultyIntern(
     nonAshesiEmail VARCHAR(70) UNIQUE ,
     PhoneNumber VARCHAR(20),
     FacialData VARCHAR(100) UNIQUE NOT NULL,
-    PasswordC VARCHAR(50) DEFAULT NULL,
+    PasswordC VARCHAR(100) DEFAULT NULL,
     Registered BOOLEAN DEFAULT FALSE
     );
 
@@ -118,6 +118,7 @@ CREATE TABLE Lectures(
 	Id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     Lecture VARCHAR(100),
     LectureDate DATETIME,
+    LectureTime INT(11),
     CourseID VARCHAR(10)NOT NULL,
     FacultyID VARCHAR(10) NOT NULL,
     FacultyIntern_ID VARCHAR(10) NOT NULL,

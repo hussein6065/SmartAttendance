@@ -98,6 +98,7 @@ class FormModal extends Component {
 									this.setState({ load: true });
 								},
 								onClose: () => {
+									this.setState({ load: false });
 									this.setState({ open: false });
 								},
 							}

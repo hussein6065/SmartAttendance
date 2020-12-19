@@ -395,17 +395,15 @@ class Intern{
         return false;
         
     }
-    public function getZoomLink($student=null){
-        $query ="SELECT Id, ZoomLink , LectureTime from Lectures where CourseID =:cId order by Id DESC  LIMIT 1";
+    public function getZoomLink(){
+        $query ="SELECT ZoomLink , LectureTime from Lectures where CourseID =:cId order by Id DESC  LIMIT 1";
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':cId',$this->courseID);
         if($stmt->execute()){
             if($stmt->rowCount()>0){
                 
                 $row=$stmt->fetch(PDO::FETCH_ASSOC);
-                if(isset($student)){
-                    $this->fillStudent($student,$row['Id']);
-                }
+                // return $row['ZoomLink'];
                 return array('link'=>$row['ZoomLink'],'time'=>$row['LectureTime']);
             }
         }

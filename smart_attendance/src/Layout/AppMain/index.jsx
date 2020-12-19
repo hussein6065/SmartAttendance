@@ -3,7 +3,7 @@ import React, { Suspense, lazy, Fragment } from 'react';
 const Login = lazy(() => import('../../pages/Login'));
 const SignUp = lazy(() => import('../../pages/signup'));
 const Dashboard = lazy(() => import('../../pages/Dashboard'));
-const Info = lazy(() => import('../../pages/Info'));
+const Info = lazy(() => import('../../pages/Info2'));
 const AppMain = () => {
 	return (
 		<Fragment>
@@ -75,6 +75,7 @@ const AppMain = () => {
 			>
 				<Route path="/signup" component={SignUp} />
 			</Suspense>
+			<Route path="/" render={() => <Redirect to="/login" />} />
 		</Fragment>
 	);
 };

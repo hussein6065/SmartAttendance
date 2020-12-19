@@ -7,41 +7,41 @@ import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 // import Webcam from 'react-webcam';
-import Table from '../Table/TableS';
+import Table from '../Table/new';
 import { faSchool } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-const data = [
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'missed',
-	},
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'attended',
-	},
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'attended',
-	},
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'missed',
-	},
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'missed',
-	},
-	{
-		id: 60652022,
-		name: 'Hussein Fuseini',
-		status: 'missed',
-	},
-];
+// const data = [
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'missed',
+// 	},
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'attended',
+// 	},
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'attended',
+// 	},
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'missed',
+// 	},
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'missed',
+// 	},
+// 	{
+// 		id: 60652022,
+// 		name: 'Hussein Fuseini',
+// 		status: 'missed',
+// 	},
+// ];
 export default function FormDialog(props) {
 	const [open, setOpen] = useState(false);
 
@@ -71,7 +71,7 @@ export default function FormDialog(props) {
 					Attandance For {props.data.lecture}
 				</DialogTitle>
 				<DialogContent>
-					<Table data={data} />
+					<Table data={props.data.students} lecture={props.data.id} />
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">

@@ -1,60 +1,97 @@
 import React, { Component, Fragment } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { connect } from 'react-redux';
 import { logo } from '../Logo';
 import { Row, Col } from 'reactstrap';
 import Table from '../../components/Table/TableF';
+import Table2 from '../../components/Table/Table2';
+import { RotateLoader } from 'react-spinners';
+import { css } from '@emotion/react/';
 // import Course from './Course';
 
 class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: {
-				code: 'CS 111',
-				faculty: 'Francis Gatsi',
-				fi: 'Nana Ama',
-				students: 50,
-			},
+			data: [],
+			load: false,
+			tableData: null,
 		};
 	}
-
+	loaderCSS = css`
+		margin-top: 25px;
+		margin-bottom: 25px;
+	`;
 	UNSAFE_componentWillMount() {
 		let { enableLogin, user, userData, setType } = this.props;
 
-		if (!enableLogin) {
-			this.props.history.push('/login');
+		if (false) {
+			this.props.history.push('/login/');
 		} else {
 			this.setState({ info: user });
 			this.setState({ data: userData });
 			this.setState({ type: setType });
 		}
 	}
-	data = [
-		{
-			id: 1,
-			date: 'Sat Oct 10 11:58:11 2020',
-			lecture: 'Lecture 1',
-			week: '1',
-			attendees: 25,
-		},
-		{
-			id: 2,
-			date: 'Sat Oct 10 11:58:11 2020',
-			lecture: 'Lecture 3',
-			week: '2',
-			attendees: 25,
-		},
-		{
-			id: 3,
-			date: 'Sat Oct 10 11:58:11 2020',
-			lecture: 'Lecture 3',
-			week: '3',
-			attendees: 25,
-		},
-	];
+	// data = [
+	// 	{
+	// 		id: 1,
+	// 		date: 'Sat Oct 10 11:58:11 2020',
+	// 		lecture: 'Lecture 1',
+	// 		week: '1',
+	// 		attendees: 25,
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		date: 'Sat Oct 10 11:58:11 2020',
+	// 		lecture: 'Lecture 3',
+	// 		week: '2',
+	// 		attendees: 25,
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		date: 'Sat Oct 10 11:58:11 2020',
+	// 		lecture: 'Lecture 3',
+	// 		week: '3',
+	// 		attendees: 25,
+	// 	},
+	// ];
+	componentDidMount() {
+		var cours = localStorage.getItem('course');
+		var dat = this.state.data.filter((info) => info.id === cours);
+		this.setState({ data: dat[0] });
+		this.setState({ load: true });
+		// fetch('http://localhost/backend/backend/api/read.php')
+		// 	.then((response) => response.text())
+		// 	.then((data) => {
+		// 		console.log(data);
+		// 	});
+		var dataSend = {
+			type: this.state.type === 'student' ? 'lectures' : 'course',
+			course: cours,
+			id: this.state.type === 'student' ? this.state.info.id : '',
+		};
+		console.log(dataSend);
+		fetch('http://localhost/backend/backend/api/getAttendance.php', {
+			method: 'POST',
+			header: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(dataSend),
+		})
+			.then((response) => response.json())
+
+			.then((data) => {
+				console.log(data);
+				this.setState({ tableData: data });
+				this.setState({ load: false });
+			});
+	}
 	render() {
-		const { data } = this.state;
+		const { data, info, tableData } = this.state;
+		console.log('The data =>', tableData);
+
 		return (
 			<Fragment>
 				<nav
@@ -79,37 +116,76 @@ class Dashboard extends Component {
 
 				<Row className=" m-2 p-2 border border-info">
 					<span className="text-capitalize">
-						<h2>Computer Organization</h2>
+						<h2>{data.course}</h2>
 					</span>
 				</Row>
 				<Row className=" m-2 p-2 border border-info">
 					<Col>
-						<div>
-							<span className="mr-2">Course Code:</span>
-							{data.code} <span></span>
-						</div>
-						<div>
-							<span className="mr-2">Faculty:</span>{' '}
-							<span>{data.faculty} </span>
-						</div>
-						<div>
-							<span className="mr-2">Faculty Intern:</span>
-							<span>{data.fi} </span>
-						</div>
-						<div>
-							<span className="mr-2">Total Number of Students:</span>
-							<span>{data.students} </span>
-						</div>
+						<div>Course Code</div>
+						<div>Faculty</div>
+
+						<div>Faculty Intern</div>
+						{this.state.type === 'fi' && <div>Total Number of Students</div>}
+					</Col>
+					<Col>
+						<div>{data.id}</div>
+						<div>{data.faculty}</div>
+
+						<div>{data.fi}</div>
+						{this.state.type === 'fi' && <div>{data.numberOfStudents}</div>}
 					</Col>
 				</Row>
 				<Row className=" m-2 p-2 border border-info">
-					<Col>
-						<Table data={this.data} />
-					</Col>
+					{this.state.type === 'fi' && (
+						<Col>
+							{tableData !== null ? <Table data={tableData} /> : ''}
+							{/* <Table data={tableData} /> */}
+						</Col>
+					)}
+					{this.state.type === 'student' && (
+						<Col>
+							{tableData !== null ? <Table2 data={tableData} /> : ''}
+							{/* <Table data={tableData} /> */}
+						</Col>
+					)}
 				</Row>
+				{this.state.load ? (
+					<div
+						style={{
+							position: 'fixed',
+							top: '0',
+							left: '0',
+							height: '100vh',
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'center',
+							width: '100%',
+							zIndex: '1500',
+						}}
+					>
+						<div>
+							<RotateLoader
+								css={this.loaderCSS}
+								color="blue"
+								loading={this.state.load}
+							/>
+						</div>
+					</div>
+				) : (
+					''
+				)}
 			</Fragment>
 		);
 	}
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+	enableLogin: state.Information.enableLogin,
+	user: state.Information.user,
+	userData: state.Information.userData,
+	setType: state.Information.setType,
+});
+
+const mapDispatchToProps = (dispatch) => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

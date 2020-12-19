@@ -41,7 +41,7 @@ export default class Table extends Component {
 				sort: true,
 			},
 			{
-				dataField: 'name',
+				dataField: 'student',
 				text: 'Student',
 				sort: true,
 			},
@@ -51,17 +51,17 @@ export default class Table extends Component {
 				sort: true,
 				formatter: (cellContent) => {
 					switch (cellContent) {
-						case 'missed':
+						case '0':
 							return (
 								<span className="mb-2 mr-2 badge badge-pill badge-danger">
-									{cellContent}
+									Missed
 								</span>
 							);
 
-						case 'attended':
+						case '1':
 							return (
 								<span className="mb-2 mr-2 badge badge-pill badge-success">
-									{cellContent}
+									Present
 								</span>
 							);
 						default:

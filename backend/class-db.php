@@ -1,12 +1,12 @@
 <?php
-require "db_cred.php";
+// require "db_cred.php";
 
 class DB {
-    private $dbHost     = SERVER;
-    private $dbUsername = USERNAME;
-    private $dbPassword = PASSWD;
-    private $dbName     = DATABASE;
- 
+    private $dbHost     = 'localhost';
+    private $dbUsername = "root";
+    private $dbPassword = "";
+    private $dbName     = "HBF606520222";
+   
     public function __construct(){
         if(!isset($this->db)){
             // Connect to the database

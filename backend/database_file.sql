@@ -122,7 +122,7 @@ CREATE TABLE Lectures(
     CourseID VARCHAR(10)NOT NULL,
     FacultyID VARCHAR(10) NOT NULL,
     FacultyIntern_ID VARCHAR(10) NOT NULL,
-    NumWeek int unsigned,
+    NumWeek VARCHAR(10),
     ZoomLink VARCHAR(100),
     ZoomMeetingId INT UNSIGNED,
     ZoomPassword VARCHAR(100),
@@ -145,3 +145,8 @@ CREATE TABLE AttendanceTable(
     
 
 
+CREATE TABLE `token` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `access_token` text NOT NULL,
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

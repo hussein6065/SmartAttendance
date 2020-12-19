@@ -21,6 +21,7 @@ class Intern{
 
     public $lecture;
     public $courseID;
+    public $faculty;
 
 
     public function __construct($db){
@@ -207,7 +208,8 @@ class Intern{
                     'date' =>$LectureTime,
                     'fi'=>$FI,
                     'faculty'=>$Faculty,
-                    'zoomlink'=>$ZoomLink
+                    'zoomlink'=>$ZoomLink,
+                    'numberOfStudents'=>$this->getNumberOfStudnetsPerCourse($CourseID)
                    );
                    array_push($courses,$course);
                }
@@ -250,14 +252,14 @@ class Intern{
 
         return false;
     }
-    public function getStudentsPreLecture(){
+    public function getStudentsPreLecture($id){
         $query = "SELECT I.StudentID, A.Confirmation,concat(I.FName,' ',I.LName) as student FROM AttendanceTable A 
         INNER JOIN  Lectures L on A.LectureID = L.Id
         INNER JOIN Courses C on L.CourseID = C.CourseID
         INNER JOIN Students I on A.StudentID = I.StudentID
         WHERE A.LectureID=:id";
         $stmt = $this->connection->prepare($query);
-        $stmt->bindparam(':id',$this->lecture);
+        $stmt->bindparam(':id',$id);
 
         if($stmt->execute()){
             if($stmt->rowCount()>0){
@@ -275,13 +277,13 @@ class Intern{
                 return $courses;
             }
         }
-        printf("Error: %s.\n", $stmt->error);
+        // printf("Error: %s.\n", $stmt->error);
 
         return false;
     }
 
     public function getLecturesPerCourse(){
-        $query = "SELECT L.NumWeek, A.Confirmation, L.Lecture, L.Id FROM AttendanceTable A INNER JOIN  Lectures L on A.LectureID = L.Id
+        $query = "SELECT L.NumWeek, L.LectureTime, A.Confirmation, L.Lecture, L.Id FROM AttendanceTable A INNER JOIN  Lectures L on A.LectureID = L.Id
         INNER JOIN Courses C on L.CourseID = C.CourseID
         INNER JOIN FacultyIntern I on L.FacultyIntern_ID = I.FacultyIntern_ID
         WHERE L.CourseID=:id";
@@ -297,7 +299,10 @@ class Intern{
                         'week'=>$NumWeek,
                         'lecture'=>$Lecture,
                         'id'=>$Id,
-                        'status'=>$Confirmation
+                        'attendees'=>$this->getNumberOfAttandancePerLecture($Id),
+                        'date' =>$LectureTime,
+                        'students'=>$this->getStudentsPreLecture($Id)
+
 
                     );
                     array_push($courses,$course);
@@ -309,46 +314,79 @@ class Intern{
 
         return false;
     }
-    public function getNumberOfAttandancePerLecture(){
-        $query = "SELECT COUNT(StudentID) from AttendanceTable where LectureID=:id and Confirmation = true;
+
+   
+   public function getNumberOfStudnetsPerCourse($id){
+    $query = "SELECT  Count( StudentID) as num  from Registered_Courses where CourseID=:id";
+    $stmt = $this->connection->prepare($query);
+    $stmt->bindparam(':id',$id);
+
+    if($stmt->execute()){
+        $row=$stmt->fetch(PDO::FETCH_ASSOC);
+        return$row['num'];
+        
+    }
+    printf("Error: %s.\n", $stmt->error);
+
+    return false;
+}
+    public function getNumberOfAttandancePerLecture($id){
+        $query = "SELECT COUNT(StudentID) as num from AttendanceTable where LectureID=:id and Confirmation = true;
         ";
         $stmt = $this->connection->prepare($query);
-        $stmt->bindparam(':id',$this->lecture);
+        $stmt->bindparam(':id',$id);
 
         if($stmt->execute()){
-            // Extract before you return
-            return $stmt;
+            $row=$stmt->fetch(PDO::FETCH_ASSOC);
+            return$row['num'];
         }
         printf("Error: %s.\n", $stmt->error);
 
         return false;
     }
-    public function markAttandance($student){
-        $query = "UPDATE AttendanceTable set Confirmation = True where StudentID =:student and LectureId =:id";
+    public function markAttandance($student,$value){
+        $query = "UPDATE AttendanceTable set Confirmation =:con where StudentID =:student and LectureId =:id";
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':student',$student);
+        $stmt->bindparam(':con',$value);
         $stmt->bindparam(':id',$this->lecture);
 
         if($stmt->execute()){
             // Extract before you return
             return true;
         }
-        printf("Error: %s.\n", $stmt->error);
+        // printf("Error: %s.\n", $stmt->error);
 
         return false;
     }
+
     public function autoMark(){
 
     }
-    public function sheduleLecture($lecture, $lectureDate,$week){
-        $query = 'INSERT into Lectures (Lecture, LectureDate, CourseID,FacultyID,FacultyIntern_ID,NumWeek) values (:lec,:ldate,:cId,:fId,:fiId,:numW)';
+    private function getFaculty(){
+        $query = 'SELECT FacultyID, FacultyIntern_ID from  Registered_Courses where CourseID =:cId Limit 1';
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindparam(':cId',$this->courseID);
+        if($stmt->execute()){
+            $row=$stmt->fetch(PDO::FETCH_ASSOC);
+            extract($row);
+            $this->id = $FacultyIntern_ID;
+            $this->faculty = $FacultyID;
+            return true;
+        }
+    }
+    public function scheduleLecture($lecture, $lectureDate,$week,$zoom){
+        $this->getFaculty();
+        $query = 'INSERT into Lectures (Lecture, LectureTime, CourseID,FacultyID,FacultyIntern_ID,NumWeek,ZoomLink) values (:lec,:ldate,:cId,:fId,:fiId,:numW,:link)';
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':lec',$lecture);
         $stmt->bindparam(':ldate',$lectureDate);
         $stmt->bindparam(':cId',$this->courseID);
-        $stmt->bindparam(':fId',$this->id);
+        $stmt->bindparam(':fId',$this->faculty);
         $stmt->bindparam(':fiId',$this->id);
         $stmt->bindparam(':numW',$week);
+        $stmt->bindparam(':link',$zoom);
         if($stmt->execute()){
             // Extract before you return
             return true;
@@ -357,15 +395,21 @@ class Intern{
         return false;
         
     }
-    public function getZoomLink(){
-        $query ="SELECT ZoomLink from Lectures where CourseID =:cId order by Id DESC";
+    public function getZoomLink($student=null){
+        $query ="SELECT Id, ZoomLink , LectureTime from Lectures where CourseID =:cId order by Id DESC  LIMIT 1";
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':cId',$this->courseID);
         if($stmt->execute()){
-            // Extract before you return
-            return true;
+            if($stmt->rowCount()>0){
+                
+                $row=$stmt->fetch(PDO::FETCH_ASSOC);
+                if(isset($student)){
+                    $this->fillStudent($student,$row['Id']);
+                }
+                return array('link'=>$row['ZoomLink'],'time'=>$row['LectureTime']);
+            }
         }
-        printf("Error: %s.\n", $stmt->error);
+        // printf("Error: %s.\n", $stmt->error);
         return false;
     }
 

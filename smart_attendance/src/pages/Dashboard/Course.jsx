@@ -8,6 +8,7 @@ import ModalM from '../../components/modals/scheduleM';
 
 function Course(props) {
 	const history = useHistory();
+
 	const { data } = props;
 	return (
 		<Fragment>
@@ -22,8 +23,8 @@ function Course(props) {
 								cursor: 'pointer',
 							}}
 							onClick={() => {
+								localStorage.setItem('course', data.id);
 								history.push('/Info/faculty');
-								console.log('Hussein');
 							}}
 						></div>
 						<div>
@@ -57,7 +58,16 @@ function Course(props) {
 						</div>
 						<hr />
 						<nav>
-							<Modal />
+							{props.user === 'fi' && (
+								<div className="mb-2">
+									<ModalM info={data} />
+								</div>
+							)}
+							<Modal
+								info={data}
+								user={props.user}
+								title={props.user === 'fi' ? 'Start Lecture' : 'Join Lecture'}
+							/>
 						</nav>
 					</CardBody>
 				</Card>

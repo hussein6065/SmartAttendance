@@ -18,6 +18,7 @@ class Student{
     public $password;
     private $logIn;
 
+    
 
     public function __construct($db){
         $this->connection=$db;
@@ -222,14 +223,34 @@ class Student{
         return false;
 
     }
-    private function getAttendace($course){
-        $query ='SELEct count(L.CourseID) from Lectures L INNER JOIN AttendanceTable A on L.Id = A.LectureID  where L.CourseID =:Id and A.StudentID=:student';
+    public function getAttendance($course){
+        $query ='SELECT L.NumWeek, L.LectureTime, A.Confirmation, L.Lecture, L.Id from Lectures L INNER JOIN AttendanceTable A on L.Id = A.LectureID  where L.CourseID =:Id and A.StudentID=:student';
         $stmt = $this->connection->prepare($query);
-        $stmt->bindparam(':id',$course);
-        $stmt->bindparam(':studentID',$this->Id);
+        $stmt->bindparam(':Id',$course);
+        $stmt->bindparam(':student',$this->id);
+        if($stmt->execute()){
+            if($stmt->rowCount()>0){
+                $courses = array();
+                while($row=$stmt->fetch(PDO::FETCH_ASSOC)){
+                    extract($row);
+                    $course = array(
+                        'week'=>$NumWeek,
+                        'lecture'=>$Lecture,
+                        'id'=>$Id,
+                        'date' =>$LectureTime,
+                        'status'=>$Confirmation
+                    );
+                    array_push($courses,$course);
+                }
+                return $courses;
+            }
+        }
+        printf("Error: %s.\n", $stmt->error);
+
+        return false;
     }
     private function getOccuredLecture($course){
-        $query ='SELEct count(L.CourseID) from Lectures L INNER JOIN AttendanceTable A on L.Id = A.LectureID  where L.CourseID =:Id';
+        $query ='SELECT count(L.CourseID) from Lectures L INNER JOIN AttendanceTable A on L.Id = A.LectureID  where L.CourseID =:Id';
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':id',$course);
     }

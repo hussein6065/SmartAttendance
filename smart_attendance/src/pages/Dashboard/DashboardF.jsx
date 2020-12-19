@@ -34,11 +34,12 @@ class Dashboard extends Component {
 			this.setState({ info: user });
 			this.setState({ data: userData });
 			this.setState({ type: setType });
+			localStorage.setItem('id', user.id);
 		}
 	}
 	render() {
 		// hussein.fuseini@ashesi.edu.gh
-		const { data, info } = this.state;
+		const { data, info, type } = this.state;
 		return (
 			<Fragment>
 				<nav
@@ -88,7 +89,7 @@ class Dashboard extends Component {
 
 				<Row className=" m-2 p-2 border border-info">
 					{data.map((info) => (
-						<Course key={info.id} data={info} />
+						<Course key={info.id} data={info} user={type} />
 					))}
 				</Row>
 			</Fragment>

@@ -12,6 +12,7 @@ import {
 } from '../../reducers/Information';
 import { RotateLoader } from 'react-spinners';
 import { css } from '@emotion/react/';
+import Modal from '../../components/modals/scheduleM';
 class Login extends Component {
 	constructor(props) {
 		super(props);
@@ -247,6 +248,7 @@ class Login extends Component {
 							</button>
 						</div>
 					</form>
+					{/* <Modal /> */}
 					{this.state.load ? (
 						<div
 							style={{

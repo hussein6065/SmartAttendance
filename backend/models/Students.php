@@ -191,8 +191,8 @@ class Student{
     private function getCourses(){
         $query = 'SELECT C.CourseID, C.CourseName, concat(I.FName," ",I.LName) as FI, concat(F.FName," ",F.LName) as Faculty , L.LectureTime,L.ZoomLink,L.ZoomMeetingId,L.ZoomPassword
 		FROM Registered_Courses R 
-        INNER JOIN Lectures L on R.CourseID = L.CourseID
-        INNER JOIN Courses C on L.CourseID = C.CourseID
+        INNER JOIN Courses C on R.CourseID = C.CourseID
+        INNER JOIN Lectures L on C.CourseID = L.CourseID
         INNER JOIN Faculty F on L.FacultyID = F.FacultyID
         INNER JOIN FacultyIntern I on L.FacultyIntern_ID = I.FacultyIntern_ID 
         WHERE R.StudentID =:id GROUP BY C.CourseID' ;
@@ -224,7 +224,7 @@ class Student{
 
     }
     public function getAttendance($course){
-        $query ='SELECT L.NumWeek, L.LectureTime, A.Confirmation, L.Lecture, L.Id from Lectures L INNER JOIN AttendanceTable A on L.Id = A.LectureID  where L.CourseID =:Id and A.StudentID=:student';
+        $query ='SELECT L.NumWeek, L.LectureTime, A.Confirmation, L.Lecture,  L.Id from AttendanceTable A INNER JOIN  Lectures L   on L.Id = A.LectureID  where L.CourseID =:Id and A.StudentID=:student GROUP BY L.Id';
         $stmt = $this->connection->prepare($query);
         $stmt->bindparam(':Id',$course);
         $stmt->bindparam(':student',$this->id);

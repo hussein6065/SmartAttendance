@@ -78,11 +78,7 @@ export default class Table extends Component {
 				text: '',
 				formatter: (e, row) => {
 					return (
-						<Modal
-							data={row}
-							lecture={this.props.lecture}
-							call={this.upUdate}
-						/>
+						<Modal data={row} lecture={this.props.lecture} call={this.upDate} />
 					);
 				},
 			},
@@ -95,11 +91,12 @@ export default class Table extends Component {
 	// 		console.log(`enter on row with index: ${rowIndex}`);
 	// 	},
 	// };
-	upUdate = (event) => {
+	upDate = (event) => {
 		var dataSend = {
 			type: 'lecture',
 			course: this.props.lecture,
 		};
+		console.log(dataSend);
 		fetch('http://localhost/backend/backend/api/getAttendance.php', {
 			method: 'POST',
 			header: {
@@ -109,32 +106,33 @@ export default class Table extends Component {
 		})
 			.then((response) => response.json())
 
-			.then((data) => {
-				console.log(data);
-				this.setState({ data: data });
+			.then((info) => {
+				console.log(info.data);
+				this.props.call();
+				this.setState({ data: info.data });
 			});
 		console.log('Did Update');
 	};
-	componentDidUpdate() {
-		var dataSend = {
-			type: 'lecture',
-			course: this.props.lecture,
-		};
-		fetch('http://localhost/backend/backend/api/getAttendance.php', {
-			method: 'POST',
-			header: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(dataSend),
-		})
-			.then((response) => response.json())
+	// componentDidUpdate() {
+	// 	var dataSend = {
+	// 		type: 'lecture',
+	// 		course: this.props.lecture,
+	// 	};
+	// 	fetch('http://localhost/backend/backend/api/getAttendance.php', {
+	// 		method: 'POST',
+	// 		header: {
+	// 			'Content-Type': 'application/json',
+	// 		},
+	// 		body: JSON.stringify(dataSend),
+	// 	})
+	// 		.then((response) => response.json())
 
-			.then((data) => {
-				console.log(data);
-				this.setState({ data: data });
-			});
-		console.log('Did Update 2');
-	}
+	// 		.then((data) => {
+	// 			console.log(data);
+	// 			this.setState({ data: data });
+	// 		});
+	// 	console.log('Did Update 2');
+	// }
 
 	contentTable = ({ paginationProps, paginationTableProps }) => (
 		<div>

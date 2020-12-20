@@ -88,6 +88,30 @@ class Dashboard extends Component {
 				this.setState({ load: false });
 			});
 	}
+	upDate = (event) => {
+		var cours = localStorage.getItem('course');
+		var dataSend = {
+			type: this.state.type === 'student' ? 'lectures' : 'course',
+			course: cours,
+			id: this.state.type === 'student' ? this.state.info.id : '',
+		};
+		console.log(dataSend);
+		fetch('http://localhost/backend/backend/api/getAttendance.php', {
+			method: 'POST',
+			header: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(dataSend),
+		})
+			.then((response) => response.json())
+
+			.then((data) => {
+				console.log(data);
+				this.setState({ tableData: data });
+				this.setState({ load: false });
+			});
+		console.log('Did Update');
+	};
 	render() {
 		const { data, info, tableData } = this.state;
 		console.log('The data =>', tableData);
@@ -138,7 +162,11 @@ class Dashboard extends Component {
 				<Row className=" m-2 p-2 border border-info">
 					{this.state.type === 'fi' && (
 						<Col>
-							{tableData !== null ? <Table data={tableData} /> : ''}
+							{tableData !== null ? (
+								<Table data={tableData} call={this.upDate} />
+							) : (
+								''
+							)}
 							{/* <Table data={tableData} /> */}
 						</Col>
 					)}

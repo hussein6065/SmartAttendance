@@ -231,7 +231,7 @@ class Login extends Component {
 								Login
 							</button>
 							<div className="d-flex justify-content-center mt-3">
-								<a className="" href="javascript:void(0);">
+								<a className="" href="#">
 									Forget Password?
 								</a>
 							</div>

@@ -44,6 +44,10 @@ export default class Table extends Component {
 				dataField: 'date',
 				text: 'Date',
 				sort: true,
+				formatter: (cellContent) => {
+					var dateTime = Date(cellContent * 1000);
+					return dateTime.toLocaleString();
+				},
 			},
 			{
 				dataField: 'id',

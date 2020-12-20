@@ -27,7 +27,7 @@
             break;
         case 'lecture':
             // $intern->lecture = $data->lecture;
-            echo json_encode($intern->getStudentsPreLecture($data->lecture));
+            echo json_encode(array('data'=>$intern->getStudentsPreLecture($data->course)));
                 break;
         case 'lectures':
             $student->id = $data->id;

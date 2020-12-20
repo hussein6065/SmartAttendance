@@ -14,9 +14,29 @@
     $db = $database->connect();
     $intern = new Intern($db);
     $intern->courseID = $data->course;
+    
     $result = $intern->getZoomLink();
-    if(!$result){
-        echo json_encode(array('status'=>'0','link'=>$result));
-    }else{
-        echo json_encode(array('status'=>'1','info'=>$result));
-    }
+   switch ($data->user) {
+       case 'student':
+            $intern->id = $data->student;
+            $attend = $intern ->fillStudent();
+            if(!($result || $attend) ){
+                echo json_encode(array('status'=>'0','link'=>$result));
+            }else{
+                echo json_encode(array('status'=>'1','info'=>$result));
+            }
+           break;
+       
+       default:
+            echo json_encode(array('status'=>'1','info'=>$result));
+           break;
+   }
+    
+    // if($data->student!==null){
+        
+    //     echo json_encode(array('status'=>'1','info'=>$intern ->fillStudent()));
+    // }else{
+    //     echo json_encode(array('status'=>'1','info'=>$data));
+    // }
+
+   

@@ -45,6 +45,10 @@ export default class Table extends Component {
 				dataField: 'date',
 				text: 'Date',
 				sort: true,
+				formatter: (cellContent) => {
+					var dateTime = Date(cellContent * 1000);
+					return dateTime.toLocaleString();
+				},
 			},
 			{
 				dataField: 'id',
@@ -65,7 +69,7 @@ export default class Table extends Component {
 				dataField: 'more',
 				text: '',
 				formatter: (e, row) => {
-					return <Modal data={row} />;
+					return <Modal data={row} call={this.props.call} />;
 				},
 			},
 		];
@@ -77,6 +81,7 @@ export default class Table extends Component {
 	// 		console.log(`enter on row with index: ${rowIndex}`);
 	// 	},
 	// };
+
 	contentTable = ({ paginationProps, paginationTableProps }) => (
 		<div>
 			<div className="float-right">

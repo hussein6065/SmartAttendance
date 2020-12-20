@@ -71,7 +71,11 @@ export default function FormDialog(props) {
 					Attandance For {props.data.lecture}
 				</DialogTitle>
 				<DialogContent>
-					<Table data={props.data.students} lecture={props.data.id} />
+					<Table
+						data={props.data.students}
+						lecture={props.data.id}
+						call={props.call}
+					/>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose} color="primary">

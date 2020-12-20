@@ -46,9 +46,11 @@ class FormModal extends Component {
 		var data = {
 			course: this.props.info.id,
 			user: this.props.user,
-			student: localStorage.getItem('id'),
+			student:
+				localStorage.getItem('id') !== null ? localStorage.getItem('id') : null,
 		};
 		// this.setState({ load: true });
+
 		console.log(data);
 		fetch('http://localhost/backend/backend/api/attendLecture.php', {
 			method: 'POST',

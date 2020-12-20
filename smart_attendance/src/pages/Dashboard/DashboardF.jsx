@@ -34,12 +34,13 @@ class Dashboard extends Component {
 			this.setState({ info: user });
 			this.setState({ data: userData });
 			this.setState({ type: setType });
-			localStorage.setItem('id', user.id);
 		}
 	}
 	render() {
 		// hussein.fuseini@ashesi.edu.gh
 		const { data, info, type } = this.state;
+		localStorage.removeItem('id');
+		this.state.type === 'student' && localStorage.setItem('id', info.id);
 		return (
 			<Fragment>
 				<nav

@@ -21,7 +21,6 @@
     $intern->lecture='1';
     $student->ashesiEmail='hussein.fusei@ashesi.edu.gh';
     
-;
     $info = array();
     $info['data']=$intern->getStudentsPreLecture('1');
     $info['data2']=$intern->getLecturesPerCourse();

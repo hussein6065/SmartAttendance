@@ -26,7 +26,7 @@ class Dashboard extends Component {
 	UNSAFE_componentWillMount() {
 		let { enableLogin, user, userData, setType } = this.props;
 
-		if (false) {
+		if (!enableLogin) {
 			this.props.history.push('/login/');
 		} else {
 			this.setState({ info: user });
@@ -73,13 +73,16 @@ class Dashboard extends Component {
 			id: this.state.type === 'student' ? this.state.info.id : '',
 		};
 		console.log(dataSend);
-		fetch('http://localhost/backend/backend/api/getAttendance.php', {
-			method: 'POST',
-			header: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(dataSend),
-		})
+		fetch(
+			'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/getAttendance.php',
+			{
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(dataSend),
+			}
+		)
 			.then((response) => response.json())
 
 			.then((data) => {
@@ -96,13 +99,16 @@ class Dashboard extends Component {
 			id: this.state.type === 'student' ? this.state.info.id : '',
 		};
 		console.log(dataSend);
-		fetch('http://localhost/backend/backend/api/getAttendance.php', {
-			method: 'POST',
-			header: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(dataSend),
-		})
+		fetch(
+			'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/getAttendance.php',
+			{
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(dataSend),
+			}
+		)
 			.then((response) => response.json())
 
 			.then((data) => {
@@ -113,7 +119,7 @@ class Dashboard extends Component {
 		console.log('Did Update');
 	};
 	render() {
-		const { data, info, tableData } = this.state;
+		const { data, tableData } = this.state;
 		console.log('The data =>', tableData);
 
 		return (

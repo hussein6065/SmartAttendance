@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 // import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,9 +10,7 @@ import { Row, Col } from 'reactstrap';
 // import Webcam from 'react-webcam';
 import { RotateLoader } from 'react-spinners';
 import { css } from '@emotion/react/';
-import { ToastContainer, toast } from 'react-toastify';
-import { faSchool } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
 
 class FormModal extends Component {
 	constructor(props) {
@@ -66,13 +64,16 @@ class FormModal extends Component {
 			};
 			this.setState({ load: true });
 			console.log(data);
-			fetch('http://localhost/backend/backend/api/scheduleLecture.php', {
-				method: 'POST',
-				header: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			})
+			fetch(
+				'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/scheduleLecture.php',
+				{
+					method: 'POST',
+					header: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			)
 				.then((response) => response.json())
 				.then((data) => {
 					console.log(data);
@@ -82,7 +83,7 @@ class FormModal extends Component {
 								<span
 									style={{ width: '100%', textAlign: 'center', float: 'right' }}
 								>
-									Lecture Schedule Successful
+									Lecture Scheduled Successful
 								</span>
 							</div>,
 							{

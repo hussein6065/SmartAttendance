@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 // import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,13 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 // import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Row, Col } from 'reactstrap';
+
 // import Webcam from 'react-webcam';
 import { RotateLoader } from 'react-spinners';
 import { css } from '@emotion/react/';
-import { ToastContainer, toast } from 'react-toastify';
-import { faSchool } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
 
 class FormModal extends Component {
 	constructor(props) {
@@ -52,13 +50,16 @@ class FormModal extends Component {
 		// this.setState({ load: true });
 
 		console.log(data);
-		fetch('http://localhost/backend/backend/api/attendLecture.php', {
-			method: 'POST',
-			header: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
+		fetch(
+			'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/attendLecture.php',
+			{
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			}
+		)
 			.then((response) => response.json())
 			.then((data) => {
 				this.setState({ load: true });
@@ -225,64 +226,3 @@ class FormModal extends Component {
 }
 
 export default FormModal;
-
-// import React, { useState } from 'react';
-// import Button from '@material-ui/core/Button';
-// // import TextField from '@material-ui/core/TextField';
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// // import DialogContentText from '@material-ui/core/DialogContentText';
-// import DialogTitle from '@material-ui/core/DialogTitle';
-// // import Webcam from 'react-webcam';
-
-// import { faSchool } from '@fortawesome/free-solid-svg-icons';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-// export default function FormDialog(props) {
-// 	const [open, setOpen] = useState(false);
-
-// 	const handleClickOpen = () => {
-// 		setOpen(true);
-// 	};
-
-// 	const handleClose = () => {
-// 		setOpen(false);
-// 	};
-
-// 	return (
-// 		<span>
-// 			<button className="btn btn-success btn-block" onClick={handleClickOpen}>
-// 				{props.title ? props.title : 'Attand Lectures'}
-// 			</button>
-// 			<Dialog
-// 				open={open}
-// 				disableBackdropClick
-// 				disableEscapeKeyDown
-// 				onClose={handleClose}
-// 				aria-labelledby="form-dialog-title"
-// 			>
-// <DialogTitle id="form-dialog-title">
-// 	Lectures of
-// </DialogTitle>
-// <DialogContent>
-// 	Lecturer: Francis Gatsi
-// 	<br />
-// 	Intern: Nana Ama
-// 	<br />
-// 	Date: 27 / 12 / 2020
-// 	<br />
-// 	Time: 17:50
-// </DialogContent>
-// <DialogActions>
-// 	<Button onClick={handleClose} color="primary">
-// 		Cancel
-// 	</Button>
-// 	<Button onClick={handleClose} color="primary">
-// 		Join Lecture
-// 	</Button>
-// </DialogActions>
-// 			</Dialog>
-// 		</span>
-// 	);
-// }

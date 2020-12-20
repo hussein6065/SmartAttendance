@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { Route } from 'react-router-dom';
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
@@ -11,8 +11,3 @@ const Dashboard = ({ match }) => (
 	</Fragment>
 );
 export default Dashboard;
-// export default class Login extends Component {
-// 	render() {
-// 		return <Dashboard />;
-// 	}
-// }

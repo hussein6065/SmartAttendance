@@ -12,7 +12,7 @@ import {
 } from '../../reducers/Information';
 import { RotateLoader } from 'react-spinners';
 import { css } from '@emotion/react/';
-import Modal from '../../components/modals/scheduleM';
+
 class Login extends Component {
 	constructor(props) {
 		super(props);
@@ -72,13 +72,16 @@ class Login extends Component {
 		};
 		if (!this.state.userError && !(this.state.password === '')) {
 			console.log(data);
-			fetch('http://localhost/backend/backend/api/login.php', {
-				method: 'POST',
-				header: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			})
+			fetch(
+				'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/login.php',
+				{
+					method: 'POST',
+					header: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			)
 				.then((response) => response.json())
 
 				.then((data) => {
@@ -231,9 +234,7 @@ class Login extends Component {
 								Login
 							</button>
 							<div className="d-flex justify-content-center mt-3">
-								<a className="" href="#">
-									Forget Password?
-								</a>
+								<a href="https://outlook.office365.com/">Forget Password?</a>
 							</div>
 
 							<hr />

@@ -32,13 +32,16 @@ export default function AlertDialogSlide(props) {
 			student: props.data.id,
 			value: props.data.status === '1' ? 0 : 1,
 		};
-		fetch('http://localhost/backend/backend/api/autoMark.php', {
-			method: 'POST',
-			header: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		})
+		fetch(
+			'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/autoMark.php',
+			{
+				method: 'POST',
+				header: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			}
+		)
 			.then((response) => response.text())
 			.then((data) => {
 				props.call();

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './index.css';
-import { image, logo } from '../Logo';
+import { logo } from '../Logo';
 import Switch from 'react-switch';
 // import FaceScan from '../../components/modals/faceScan';
 import { ToastContainer, toast } from 'react-toastify';
@@ -23,6 +23,10 @@ export default class Login extends Component {
 		};
 		toast.configure();
 	}
+	loaderCSS = css`
+		margin-top: 25px;
+		margin-bottom: 25px;
+	`;
 	handleSwitch = (value) => {
 		this.setState({ faculty: value });
 	};
@@ -79,13 +83,16 @@ export default class Login extends Component {
 				role: this.state.faculty ? 'fi' : 'student',
 			};
 			console.log(data);
-			fetch('http://localhost/backend/backend/api/register.php', {
-				method: 'POST',
-				header: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			})
+			fetch(
+				'http://smartattendance.uksouth.cloudapp.azure.com/backend/api/register.php',
+				{
+					method: 'POST',
+					header: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				}
+			)
 				.then((response) => response.json())
 
 				.then((data) => {
@@ -144,51 +151,10 @@ export default class Login extends Component {
 		}
 	};
 
-	sendData = () => {
-		// fetch('http://localhost/backend/backend/api/read.php')
-		// 	.then((res) => res.json())
-		// 	.then(
-		// 		(results) => {
-		// 			this.setState({ data: results.data });
-		// 		},
-		// 		(error) => {
-		// 			this.setState({ error });
-		// 		}
-		// 	);
-		var data = {
-			// name: 'Hussein Fuseini',
-			// userData: '',
-			url: localStorage.getItem('img'),
-			// recognitionModel: 'recognition_03',
-		};
-		// fetch(
-		// 	'https://eastus.api.cognitive.microsoft.com/face/v1.0/persongroups/sample_group_1/persons/836c5f3a-ca7f-43d9-a101-867bc115f45b/persistedFaces',
-		// 	{
-		// 		method: 'POST',
-		// 		body: localStorage.getItem('img'),
-		// 		headers: {
-		// 			'Ocp-Apim-Subscription-Key': '1594fc5295cc429c996c1814026ae32e',
-		// 			'Content-Type': 'application/octet-stream',
-		// 		},
-		// 	}
-		// )
-		// 	.then((rest) => rest.json())
-		// 	.then(
-		// 		(results) => {
-		// 			console.log(results);
-		// 		},
-		// 		(error) => alert(error)
-		// 	);
-		// "836c5f3a-ca7f-43d9-a101-867bc115f45b"
-		// alert('DOne');
-		// var ie = localStorage.getItem('img');
-		// this.setState({ image: ie });
-		// console.log(this.state.image);
-	};
-
 	render() {
 		return (
 			<div className="App">
+				<ToastContainer />
 				<nav
 					className="navbar navbar-expand-lg navbar-light fixed-top"
 					style={{ backgroundColor: '#1c8ef9' }}

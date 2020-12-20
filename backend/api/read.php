@@ -23,6 +23,6 @@
     
 ;
     $info = array();
-    $info['data']=$intern->getStudentsPreLecture();
+    $info['data']=$intern->getStudentsPreLecture('1');
     $info['data2']=$intern->getLecturesPerCourse();
     echo json_encode($info);

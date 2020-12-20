@@ -1,9 +1,10 @@
 <?php
+    define('PASSWORD',getenv('MYSQLPASS')??'');
     class Database{
         private $host = 'localhost';
         private $db_name = 'HBF606520222';
         private $username = 'root';
-        private $password = '';
+        private $password = PASSWORD;
         private $conn;
         
         public function connect(){

@@ -89,6 +89,7 @@ export default class Login extends Component {
 				.then((response) => response.json())
 
 				.then((data) => {
+					console.log(data);
 					if (data.status === '1') {
 						toast.success(
 							<div>
